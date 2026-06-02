@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jose & Anahi 💕</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Quicksand:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+    <div id="particles-js"></div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-hearts">
+                <span class="loading-heart" style="animation-delay:0s;">💕</span>
+                <span class="loading-heart" style="animation-delay:0.3s;">💕</span>
+                <span class="loading-heart" style="animation-delay:0.6s;">💕</span>
+            </div>
+            <h1 class="loading-title">Jose <span class="heart">&hearts;</span> Anahi</h1>
+            <p class="loading-sub">Nuestra Historia de Amor</p>
+            <div class="loading-bar">
+                <div class="loading-fill" id="loadingFill"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>setTimeout(function(){var e=document.getElementById('loadingScreen');if(e)e.style.display='none';},2500);</script>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">J & A</a>
+            <div class="nav-right">
+                <label class="theme-toggle" title="Modo claro/oscuro">
+                    <input type="checkbox" id="themeCheckbox" onchange="toggleTheme()" />
+                    <span class="theme-slider">🌙</span>
+                </label>
+                <button class="nav-toggle" onclick="toggleNav()">☰</button>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="#historia" onclick="closeNav()">Historia</a>
+                <a href="#galeria" onclick="closeNav()">Fotos</a>
+                <a href="#mapa" onclick="closeNav()">Mapa</a>
+                <a href="#playlist" onclick="closeNav()">Playlist</a>
+                <a href="#letras" onclick="closeNav()">Letras</a>
+                <a href="#razones" onclick="closeNav()">Razones</a>
+                <a href="#proximo27" onclick="closeNav()">27</a>
+                <a href="#infografia" onclick="closeNav()">Infografía</a>
+                <a href="#compatibilidad" onclick="closeNav()">Test</a>
+                <a href="#vela" onclick="closeNav()">Vela</a>
+                <a href="#libro" onclick="closeNav()">Libro</a>
+                <a href="#reproductor" onclick="closeNav()">🎵</a>
+                <a href="#carrusel" onclick="closeNav()">📸</a>
+                <a href="#capsula" onclick="closeNav()">⏳</a>
+                <a href="#citas" onclick="closeNav()">🎲</a>
+                <a href="#sorpresa" onclick="closeNav()">🎁</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <p class="subtitle">Nuestra Historia de Amor</p>
+            <h1 class="title">Jose <span class="heart">&hearts;</span> Anahi</h1>
+            <p class="anniversary-text">Cada 27 — Nuestro día</p>
+            <div class="counter" id="counter">
+                <div class="counter-item"><span id="months">0</span><label>Meses</label></div>
+                <div class="counter-item"><span id="days">0</span><label>Días</label></div>
+                <div class="counter-item"><span id="hours">0</span><label>Horas</label></div>
+                <div class="counter-item"><span id="minutes">0</span><label>Minutos</label></div>
+                <div class="counter-item"><span id="seconds">0</span><label>Segundos</label></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Historia -->
+    <section class="section" id="historia">
+        <h2 class="section-title">Nuestra Historia</h2>
+        <p class="section-subtitle">Clickeá en un mes para agregar una foto o recuerdo</p>
+        <div class="timeline" id="timeline">
+            <div class="timeline-item">
+                <div class="timeline-date">27 Feb</div>
+                <div class="timeline-content">
+                    <h3>El Comienzo</h3>
+                    <p>El día que todo empezó. El mejor 27 de nuestras vidas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galería -->
+    <section class="section" id="galeria">
+        <h2 class="section-title">Nuestros Momentos</h2>
+        <p class="section-subtitle">Subí tus fotos favoritas</p>
+        <div class="gallery" id="gallery"></div>
+        <div class="upload-area" id="uploadArea">
+            <span class="upload-icon">📷</span>
+            <p>Hacé clic o arrastrá fotos aquí</p>
+            <input type="file" id="fileInput" accept="image/*" multiple hidden />
+        </div>
+    </section>
+
+    <!-- Mapa -->
+    <section class="section" id="mapa">
+        <h2 class="section-title">Nuestros Lugares</h2>
+        <p class="section-subtitle">Los lugares que marcaron nuestra historia</p>
+        <div class="map-container">
+            <div id="map"></div>
+            <div class="map-form">
+                <input type="text" id="map-search" placeholder="Buscar lugar..." />
+                <button class="btn" onclick="searchLocation()">Agregar</button>
+            </div>
+            <div class="map-markers-list" id="mapMarkersList"></div>
+        </div>
+    </section>
+
+    <!-- Playlist -->
+    <section class="section" id="playlist">
+        <h2 class="section-title">Nuestra Playlist</h2>
+        <p class="section-subtitle">Los artistas que nos acompañan</p>
+        <div class="spotify-grid">
+            <div class="spotify-card" style="--accent:#1DB954;">
+                <div class="spotify-img" style="background:linear-gradient(135deg,#1DB954,#191414);"><span>🎵</span></div>
+                <h3>Coldplay</h3>
+                <p>Nuestras canciones favoritas</p>
+                <input type="text" class="spotify-input" placeholder="Link de Spotify/YouTube..." />
+                <button class="btn-spotify" onclick="addArtistSong('coldplay', event)">Agregar</button>
+                <div class="spotify-tracks" id="tracks-coldplay"></div>
+            </div>
+            <div class="spotify-card" style="--accent:#E74C6F;">
+                <div class="spotify-img" style="background:linear-gradient(135deg,#E74C6F,#2d1b2e);"><span>🎵</span></div>
+                <h3>Humbe</h3>
+                <p>Para los sentimientos</p>
+                <input type="text" class="spotify-input" placeholder="Link de Spotify/YouTube..." />
+                <button class="btn-spotify" onclick="addArtistSong('humbe', event)">Agregar</button>
+                <div class="spotify-tracks" id="tracks-humbe"></div>
+            </div>
+            <div class="spotify-card" style="--accent:#FF6B35;">
+                <div class="spotify-img" style="background:linear-gradient(135deg,#FF6B35,#1a1a2e);"><span>🎵</span></div>
+                <h3>Jorge Cuellar</h3>
+                <p>El toque romántico</p>
+                <input type="text" class="spotify-input" placeholder="Link de Spotify/YouTube..." />
+                <button class="btn-spotify" onclick="addArtistSong('jorge', event)">Agregar</button>
+                <div class="spotify-tracks" id="tracks-jorge"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Letras de canciones -->
+    <section class="section" id="letras">
+        <h2 class="section-title">Letras Que Nos Representan</h2>
+        <p class="section-subtitle">Fragmentos de canciones que son nuestro soundtrack</p>
+        <div class="lyrics-grid" id="lyricsContainer"></div>
+    </section>
+
+    <!-- Razones -->
+    <section class="section" id="razones" style="opacity:1!important;transform:none!important;">
+        <h2 class="section-title">Por Qué Te Amo</h2>
+        <div class="reasons-container" id="reasons-list"><p class="section-subtitle" style="text-align:center;padding:1rem;">Cargando razones...</p></div>
+        <button class="btn" onclick="addReason()">Agregar Razón</button>
+    </section>
+
+    <!-- Calendario -->
+    <section class="section" id="calendario">
+        <h2 class="section-title">Calendario de Amor</h2>
+        <p class="section-subtitle">Fechas que marcaron nuestro corazón</p>
+        <div class="calendar-nav">
+            <button class="btn-small" onclick="changeMonth(-1)">←</button>
+            <span id="calendarMonthYear" class="calendar-month-label"></span>
+            <button class="btn-small" onclick="changeMonth(1)">→</button>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+        <div class="calendar-events" id="calendarEvents"></div>
+        <div class="calendar-add">
+            <input type="date" id="eventDate" />
+            <input type="text" id="eventTitle" placeholder="¿Qué pasó este día?" />
+            <button class="btn" onclick="addCalendarEvent()">Agregar</button>
+        </div>
+    </section>
+
+    <!-- Próximo 27 -->
+    <section class="section" id="proximo27">
+        <h2 class="section-title">Próximo 27 💕</h2>
+        <p class="section-subtitle">Cuenta regresiva para nuestro próximo aniversario</p>
+        <div class="next27-container">
+            <div class="next27-item"><span id="nextDays">0</span><label>Días</label></div>
+            <div class="next27-item"><span id="nextHours">0</span><label>Horas</label></div>
+            <div class="next27-item"><span id="nextMinutes">0</span><label>Minutos</label></div>
+            <div class="next27-item"><span id="nextSeconds">0</span><label>Segundos</label></div>
+        </div>
+    </section>
+
+    <!-- Infografía -->
+    <section class="section" id="infografia">
+        <h2 class="section-title">Nuestra Relación en Números</h2>
+        <p class="section-subtitle">Datos que duelen... de amor 💕</p>
+        <div class="infographics-grid" id="infographicsGrid"></div>
+        <div class="infographics-custom">
+            <input type="text" id="infraLabel" placeholder="Etiqueta (ej: 'Mensajes enviados')" />
+            <input type="text" id="infraValue" placeholder="Valor (ej: '12,430')" />
+            <input type="text" id="infraIcon" placeholder="Icono (ej: 💬)" maxlength="2" />
+            <button class="btn" onclick="addCustomInfographic()">Agregar Dato</button>
+        </div>
+    </section>
+
+    <!-- Quiz -->
+    <section class="section" id="quiz">
+        <h2 class="section-title">¿Cuánto Me Conoces?</h2>
+        <p class="section-subtitle">Demostrá que tanto sabés de nosotros 💕</p>
+        <div class="quiz-container" id="quiz-container">
+            <div class="quiz-header">
+                <span class="quiz-progress" id="quizProgress">Pregunta 1 de 5</span>
+                <span class="quiz-score" id="quizScore">Puntaje: 0</span>
+            </div>
+            <div class="quiz-question" id="quizQuestion"></div>
+            <div class="quiz-options" id="quizOptions"></div>
+            <div class="quiz-result" id="quizResult"></div>
+            <button class="btn" id="quizNextBtn" onclick="nextQuestion()" style="display:none;">Siguiente</button>
+        </div>
+    </section>
+
+    <!-- Test de compatibilidad -->
+    <section class="section" id="compatibilidad">
+        <h2 class="section-title">Test de Compatibilidad</h2>
+        <p class="section-subtitle">¿Qué tan sincronizados están?</p>
+        <div class="compat-container" id="compatContainer">
+            <div class="compat-phase" id="compatPhase1">
+                <h3>Turno de Jose</h3>
+                <p>Respondé las preguntas, Anahí no mire 👀</p>
+            </div>
+            <div class="compat-question" id="compatQuestion"></div>
+            <div class="compat-options" id="compatOptions"></div>
+            <div class="compat-progress"><span id="compatCount">1/5</span></div>
+            <button class="btn" id="compatNextBtn" onclick="nextCompatQuestion()" style="display:none;">Siguiente</button>
+            <div class="compat-result" id="compatResult"></div>
+        </div>
+    </section>
+
+    <!-- Nube de palabras -->
+    <section class="section" id="nube">
+        <h2 class="section-title">Nube de Palabras</h2>
+        <p class="section-subtitle">Lo que nos define como pareja</p>
+        <div class="wordcloud-container" id="wordcloud">
+            <div class="wordcloud-input-area">
+                <input type="text" id="wordInput" placeholder="Escribí una palabra y presioná Enter..." />
+            </div>
+            <div class="wordcloud" id="wordcloudDisplay"></div>
+        </div>
+    </section>
+
+    <!-- Cartas -->
+    <section class="section" id="cartas">
+        <h2 class="section-title">Cartas de Amor</h2>
+        <div class="letters-container" id="letters-container"></div>
+        <button class="btn" onclick="showWriteLetter()">Escribir Carta</button>
+    </section>
+
+    <!-- Vela virtual -->
+    <section class="section" id="vela">
+        <h2 class="section-title">🕯️ Vela Virtual</h2>
+        <p class="section-subtitle">Sopla la vela para pedir un deseo... mové el celular o soplá</p>
+        <div class="candle-container">
+            <div class="candle" id="candle">
+                <div class="candle-body"></div>
+                <div class="candle-flame" id="candleFlame">
+                    <div class="flame-inner"></div>
+                </div>
+                <div class="candle-wax"></div>
+            </div>
+            <div class="candle-smoke" id="candleSmoke"></div>
+            <p class="candle-hint" id="candleHint">Soplá o mové el dispositivo para apagar la vela 🕯️</p>
+            <button class="btn" onclick="relightCandle()">🔄 Encender de nuevo</button>
+        </div>
+    </section>
+
+    <!-- Libro interactivo -->
+    <section class="section" id="libro">
+        <h2 class="section-title">📖 Nuestro Libro</h2>
+        <p class="section-subtitle">Pasá las páginas de nuestra historia</p>
+        <div class="book-container">
+            <div class="book" id="book">
+                <div class="book-page" id="bookPage1">
+                    <div class="page-content">
+                        <h3>Capítulo 1</h3>
+                        <p>El encuentro. Dos almas que estaban destinadas a encontrarse.</p>
+                    </div>
+                </div>
+                <div class="book-page" id="bookPage2">
+                    <div class="page-content">
+                        <h3>Capítulo 2</h3>
+                        <p>La primera cita. Ese día supe que eras especial.</p>
+                    </div>
+                </div>
+                <div class="book-page" id="bookPage3">
+                    <div class="page-content">
+                        <h3>Capítulo 3</h3>
+                        <p>Los primeros 27 juntos. El inicio de nuestra tradición.</p>
+                    </div>
+                </div>
+                <div class="book-page" id="bookPage4">
+                    <div class="page-content">
+                        <h3>Capítulo 4</h3>
+                        <p>Nuestras canciones. La música que nos une.</p>
+                    </div>
+                </div>
+                <div class="book-page" id="bookPage5">
+                    <div class="page-content">
+                        <h3>Capítulo 5</h3>
+                        <p>Y esto apenas comienza... 🎵</p>
+                    </div>
+                </div>
+            </div>
+            <div class="book-nav">
+                <button class="btn-small" onclick="prevPage()">← Anterior</button>
+                <span class="book-counter" id="bookCounter">1 / 5</span>
+                <button class="btn-small" onclick="nextPage()">Siguiente →</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sorpresa -->
+    <section class="section" id="sorpresa">
+        <h2 class="section-title">🎁 Regalo Sorpresa</h2>
+        <p class="section-subtitle">Algo especial para cuando más lo necesites</p>
+        <div class="surprise-container">
+            <div class="surprise-gift" onclick="openSurprise()">
+                <span class="surprise-icon">🎀</span>
+                <p>Abrime</p>
+            </div>
+            <div class="surprise-modal" id="surpriseModal">
+                <div class="surprise-content">
+                    <span class="surprise-close" onclick="closeSurprise()">✕</span>
+                    <h3>Para vos, mi amor 💕</h3>
+                    <p id="surpriseText">Cada día a tu lado es el mejor regalo.</p>
+                    <textarea id="surpriseEditor" placeholder="Escribí tu mensaje sorpresa..."></textarea>
+                    <button class="btn" onclick="saveSurprise()">Guardar</button>
+                    <button class="btn" onclick="triggerConfetti()" style="background:linear-gradient(135deg,#f39c12,#e74c6f);">🎊 ¡Celebrar!</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reproductor de canciones -->
+    <section class="section" id="reproductor">
+        <h2 class="section-title">🎵 Reproductor</h2>
+        <p class="section-subtitle">Escuchá nuestras canciones</p>
+        <div class="player-artist-select">
+            <select id="playerArtist" onchange="renderPlayerTracks()">
+                <option value="coldplay">Coldplay</option>
+                <option value="humbe">Humbe</option>
+                <option value="jorge">Jorge Cuellar</option>
+            </select>
+        </div>
+        <div class="player-tracks" id="playerTracks"></div>
+        <div class="player-embed" id="playerEmbed">
+            <p class="player-placeholder">Seleccioná una canción para reproducirla</p>
+        </div>
+    </section>
+
+    <!-- Carrusel de fotos -->
+    <section class="section" id="carrusel">
+        <h2 class="section-title">📸 Carrusel de Momentos</h2>
+        <p class="section-subtitle">Nuestros recuerdos pasando uno a uno</p>
+        <div class="carousel-container">
+            <div class="carousel-viewport" id="carouselViewport">
+                <img id="carouselImg" src="" alt="Nuestros momentos" />
+            </div>
+            <div class="carousel-controls">
+                <button class="btn-small" onclick="carouselPrev()">←</button>
+                <span id="carouselCounter">0 / 0</span>
+                <button class="btn-small" onclick="carouselNext()">→</button>
+            </div>
+            <button class="btn-small" onclick="toggleCarouselAuto()" id="carouselBtn">⏸ Pausar</button>
+        </div>
+    </section>
+
+    <!-- Cápsula del Tiempo -->
+    <section class="section" id="capsula">
+        <h2 class="section-title">⏳ Cápsula del Tiempo</h2>
+        <p class="section-subtitle">Escribí un mensaje que se desbloqueará en el futuro</p>
+        <div class="capsula-container" id="capsulaContainer">
+            <div class="capsula-form" id="capsulaForm">
+                <textarea id="capsulaMessage" placeholder="Escribí tu mensaje para el futuro..." rows="4"></textarea>
+                <label class="capsula-label">¿Cuándo se puede abrir?</label>
+                <input type="date" id="capsulaDate" />
+                <button class="btn" onclick="saveCapsula()">🔒 Guardar Cápsula</button>
+            </div>
+            <div class="capsula-status" id="capsulaStatus" style="display:none;"></div>
+        </div>
+    </section>
+
+    <!-- Generador de Citas -->
+    <section class="section" id="citas">
+        <h2 class="section-title">🎲 Generador de Citas</h2>
+        <p class="section-subtitle">Ideas para nuestro próximo 27</p>
+        <div class="citas-container">
+            <div class="citas-display" id="citasDisplay">Presioná el botón para generar una idea 💡</div>
+            <button class="btn" onclick="generarCita()">🎲 Generar idea</button>
+            <div class="citas-add">
+                <input type="text" id="citasInput" placeholder="Agregá una nueva idea..." />
+                <button class="btn-small" onclick="agregarCita()">+</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-data" id="storageInfo">
+            <span class="storage-indicator">💾 Cargando...</span>
+            <span class="storage-sep">·</span>
+            <button class="btn-small" onclick="exportBackup()">📥 Exportar backup</button>
+            <button class="btn-small" onclick="document.getElementById('importFileInput').click()" style="border-color:var(--text-muted);color:var(--text-muted)">📤 Importar backup</button>
+            <input type="file" id="importFileInput" accept=".json" hidden onchange="importBackup(event)" />
+        </div>
+        <p>Hecho con todo mi amor para ti, Anahí 💕</p>
+        <p class="footer-small">— Jose</p>
+    </footer>
+
+    <!-- Modales -->
+    <div id="letter-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3 id="modal-title"></h3>
+            <p id="modal-body"></p>
+        </div>
+    </div>
+    <div id="write-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeWriteModal()">&times;</span>
+            <h3>Escribe tu carta</h3>
+            <input type="text" id="letter-title-input" placeholder="Título de la carta" />
+            <textarea id="letter-body-input" placeholder="Escribe tu carta de amor aquí..."></textarea>
+            <button class="btn" onclick="saveLetter()">Guardar Carta</button>
+        </div>
+    </div>
+
+    <canvas id="confettiCanvas"></canvas>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
