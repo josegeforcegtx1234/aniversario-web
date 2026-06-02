@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#1a1a2e"/>
+  <text x="200" y="150" text-anchor="middle" font-size="70">🎵</text>
+  <text x="200" y="240" text-anchor="middle" fill="#e8a0b4" font-family="sans-serif" font-size="28">Nuestra Playlist</text>
+  <text x="200" y="280" text-anchor="middle" fill="#a09098" font-family="sans-serif" font-size="16">Coldplay · Humbe · Jorge Cuellar</text>
+  <text x="200" y="330" text-anchor="middle" fill="#e74c6f" font-family="sans-serif" font-size="40">♫</text>
+</svg>

@@ -1,4 +1,99 @@
 // ============================================
+// Error handler + Default data
+// ============================================
+window.addEventListener('error', function(e) {
+    console.error('💥 SCRIPT ERROR:', e.message, e.filename, e.lineno);
+    const dbg = document.getElementById('js-debug');
+    if (dbg) dbg.textContent = 'Error: ' + e.message + ' en ' + (e.filename || '') + ':' + e.lineno;
+});
+
+const DEFAULTS = {
+    reasons: [
+        'Porque tu sonrisa ilumina mis días',
+        'Porque contigo todo es mejor',
+        'Porque eres única',
+        'Porque me haces feliz',
+        'Porque tu forma de ser me enamora',
+        'Porque cada día te admiro más',
+        'Porque tu mirada lo dice todo',
+        'Porque eres mi lugar seguro',
+        'Porque me inspiras a ser mejor',
+        'Porque eres la persona más especial'
+    ],
+    letters: [
+        { title: 'Para mi Anahí ❤️', body: 'Eres la persona más especial que ha llegado a mi vida. Cada 27 contigo es el mejor día del mes. Gracias por existir y por hacer mis días más brillantes. Te amo con todo mi corazón.' }
+    ],
+    words: ['Amor', 'Risas', 'Música', '27', 'Café', 'Abrazos', 'Beso', 'Confianza', 'Humbe', 'Coldplay', 'Jorge Cuellar', 'Baile'],
+    tracks: {
+        coldplay: [
+            { title: '🎧 Yellow', url: 'https://open.spotify.com/track/3AJwUDP919kvQ9QcozQPxg' },
+            { title: '🎧 Fix You', url: 'https://open.spotify.com/track/7LVHVU3tWfcxj5aiPFEW4Q' },
+            { title: '🎧 The Scientist', url: 'https://open.spotify.com/track/75JFxkI2RXiU7L9VXzMkle' }
+        ],
+        humbe: [
+            { title: '🎧 Entraban', url: 'https://open.spotify.com/track/6h5V1R0S8MqN3fnbJZvR0D' },
+            { title: '🎧 Ardía', url: 'https://open.spotify.com/track/6iL3HL7M4Z7MqsAvYprU75' },
+            { title: '🎧 Fantasma', url: 'https://open.spotify.com/track/7H1rMkUTnBTfXS4YI9WgMT' }
+        ],
+        jorge: [
+            { title: '🎧 Miel', url: 'https://open.spotify.com/track/6k2b4I9rLkZmQDxYIDPOBp' },
+            { title: '🎧 Otra Noche', url: 'https://open.spotify.com/track/5RqZ1qJmF6qVGofQb0G3Rr' },
+            { title: '🎧 Te Vas', url: 'https://open.spotify.com/track/4Q0Zm9oG0VxqB2QqRKqUJ0' }
+        ]
+    },
+    events: [
+        { date: '2026-02-27', title: '💕 Nuestra historia comienza' },
+        { date: '2026-03-27', title: '🥳 Primer mes juntos' },
+        { date: '2026-04-27', title: '🎉 Segundo mes' }
+    ],
+    markers: [
+        { name: '📍 Donde nos conocimos', lat: -34.6037, lng: -58.3816 }
+    ],
+    dateIdeas: [
+        '🌅 Ver el amanecer juntos',
+        '🍝 Cena romántica en casa',
+        '🎬 Noche de películas',
+        '🎵 Escuchar música y recordar',
+        '🚶 Caminata al atardecer',
+        '📸 Sesión de fotos',
+        '🎤 Karaoke en casa',
+        '🧁 Hacer postres juntos',
+        '🎲 Noche de juegos',
+        '💌 Escribirse cartas'
+    ]
+};
+
+function initDefaults() {
+    if (!localStorage.getItem('reasons')) localStorage.setItem('reasons', JSON.stringify(DEFAULTS.reasons));
+    if (!localStorage.getItem('letters')) localStorage.setItem('letters', JSON.stringify(DEFAULTS.letters));
+    if (!localStorage.getItem('wordcloud')) localStorage.setItem('wordcloud', JSON.stringify(DEFAULTS.words));
+    if (!localStorage.getItem('dateIdeas')) localStorage.setItem('dateIdeas', JSON.stringify(DEFAULTS.dateIdeas));
+    if (!localStorage.getItem('calendarEvents')) localStorage.setItem('calendarEvents', JSON.stringify(DEFAULTS.events));
+    if (!localStorage.getItem('mapMarkers')) localStorage.setItem('mapMarkers', JSON.stringify(DEFAULTS.markers));
+    ['coldplay','humbe','jorge'].forEach(a => { if (!localStorage.getItem(`tracks_${a}`)) localStorage.setItem(`tracks_${a}`, JSON.stringify(DEFAULTS.tracks[a])); });
+}
+
+initDefaults();
+
+// Pre-cargar fotos placeholder en IndexedDB si está vacío
+async function seedDefaultPhotos() {
+    const existing = await getAllGalleryPhotos();
+    if (existing.length > 0) return;
+    const urls = ['assets/placeholder1.svg', 'assets/placeholder2.svg', 'assets/placeholder3.svg'];
+    for (const url of urls) {
+        try {
+            const resp = await fetch(url);
+            const blob = await resp.blob();
+            await addGalleryPhoto(blob);
+        } catch (e) { console.warn('No se pudo cargar placeholder:', url); }
+    }
+    galleryPhotos = await getAllGalleryPhotos();
+    if (typeof renderGallery === 'function') renderGallery();
+    if (typeof startCarousel === 'function') startCarousel();
+}
+seedDefaultPhotos();
+
+// ============================================
 // Configuración
 // ============================================
 const CONFIG = {
