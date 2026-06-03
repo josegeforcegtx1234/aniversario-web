@@ -75,6 +75,70 @@ function initDefaults() {
 
 initDefaults();
 
+// Cargar backup automáticamente en la primera visita
+async function tryLoadBackup() {
+    if (localStorage.getItem('backupInitialized') === 'true') return false;
+    try {
+        const resp = await fetch('backup-jose-anahi-2026-06-03.json');
+        if (!resp.ok) return false;
+        const backup = await resp.json();
+
+        // Cargar todos los datos de localStorage desde el backup
+        for (const [k, v] of Object.entries(backup.localStorage || {})) {
+            localStorage.setItem(k, v);
+        }
+
+        // Cargar timelineNotes
+        if (backup.timelineNotes) {
+            timelineNotes = backup.timelineNotes;
+            saveTimelineNotes();
+        }
+
+        // Cargar fotos de la galería a IndexedDB si está vacío
+        const existingGallery = await getAllGalleryPhotos();
+        if (existingGallery.length === 0 && backup.gallery && backup.gallery.length > 0) {
+            for (const item of backup.gallery) {
+                try {
+                    const blob = await base64ToBlob(item.blob);
+                    await addGalleryPhoto(blob);
+                } catch (e) { /* skip individual photo errors */ }
+            }
+        }
+
+        // Cargar fotos de la timeline a IndexedDB
+        if (backup.timeline && backup.timeline.length > 0) {
+            const db = await openDB();
+            await new Promise((resolve, reject) => {
+                const tx = db.transaction('timeline', 'readwrite');
+                const store = tx.objectStore('timeline');
+                const req = store.clear();
+                req.onsuccess = () => resolve();
+                req.onerror = () => reject(req.error);
+            });
+            for (const item of backup.timeline) {
+                try {
+                    const blob = await base64ToBlob(item.blob);
+                    await addTimelinePhoto(item.month, blob);
+                } catch (e) { /* skip */ }
+            }
+        }
+
+        localStorage.setItem('backupInitialized', 'true');
+        return true;
+    } catch (e) {
+        console.warn('No se pudo cargar backup automático:', e);
+        return false;
+    }
+}
+
+(async () => {
+    const loaded = await tryLoadBackup();
+    if (loaded) {
+        // Recargar la página para que todos los módulos tomen los datos del backup
+        location.reload();
+    }
+})();
+
 // Pre-cargar fotos placeholder en IndexedDB si está vacío
 async function seedDefaultPhotos() {
     const existing = await getAllGalleryPhotos();
